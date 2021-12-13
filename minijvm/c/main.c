@@ -67,8 +67,10 @@ int main(int argc, char **argv) {
             }
         }
     } else {
+#ifdef EMSCRIPTEN
+        bootclasspath = "asset_dir/lib/minijvm_rt.jar";
+#else
         bootclasspath = "../../binary/lib/minijvm_rt.jar";
-        jdwp = 01;
 
 
 //        bootclasspath = "../../../orange451/minijvm_rt/target/minijvm_rt.jar";
@@ -76,6 +78,7 @@ int main(int argc, char **argv) {
 //        classpath = "../../binary/libex/joml-1.9.25.jar;../../../orange451/minijvm_extras/target/minijvm_extras-1.0-SNAPSHOT.jar;../../../orange451/glfw_gui/target/glfw_gui-1.0-SNAPSHOT.jar;../../../orange451/JadeFX/target/JadeFX-1.0-SNAPSHOT.jar;../../../orange451/ExApp/target/ExApp-1.0-SNAPSHOT.jar;./";
 //        main_name = "test.PurpleApp";
 
+#endif
 
         //test for graphics
         classpath = "../../binary/libex/glfw_gui.jar;./";
@@ -101,6 +104,12 @@ int main(int argc, char **argv) {
 
 //        classpath = "../../binary/libex/minijvm_test.jar;./";
 //        main_name = "test.HelloWorld";
+#ifdef EMSCRIPTEN
+        classpath = "asset_dir/lib/minijvm_test.jar";
+#else
+        classpath = "../../binary/libex/minijvm_test.jar;./";
+#endif
+        main_name = "test.HelloWorld";
 //        main_name = "test.Foo1";
 //        main_name = "test.Foo2";
 //        main_name = "test.Foo3";

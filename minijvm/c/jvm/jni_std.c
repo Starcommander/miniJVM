@@ -7,7 +7,7 @@
 #include <math.h>
 
 
-#if  defined(__JVM_OS_MAC__) || defined(__JVM_OS_LINUX__)
+#if  defined(__JVM_OS_MAC__) || defined(__JVM_OS_LINUX__) || defined(EMSCRIPTEN)
 
 #include <dlfcn.h>
 

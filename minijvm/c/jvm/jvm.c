@@ -300,6 +300,10 @@ s32 jvm_init(MiniJVM *jvm, c8 *p_bootclasspath, c8 *p_classpath) {
     sys_properties_load(jvm);
     sys_properties_set_c(jvm, "java.class.path", p_classpath);
     sys_properties_set_c(jvm, "sun.boot.class.path", p_bootclasspath);
+#ifdef EMSCRIPTEN
+    sys_properties_set_c(jvm, "path.separator", ":");
+    sys_properties_set_c(jvm, "file.separator", "/");
+#endif
 
     //启动调试器
     jdwp_start_server(jvm);

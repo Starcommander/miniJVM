@@ -7,7 +7,7 @@ s32 zip_loadfile(char const *jarpath, char const *filename, ByteBuf *buf) {
     mz_zip_archive zipArchive = {0};
     mz_zip_archive_file_stat file_stat = {0};
 
-    //skit the first '/'
+    //skip the first '/'
     if (filename && filename[0] == '/') {
         filename += 1;
     }
