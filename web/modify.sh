@@ -18,6 +18,7 @@ modify_target() # Args: KeyNum numLines Replacement tarFile
   elif [ $line_cnt -ne 1 ]; then
     echo "Error, key found multible times: $line_cnt"
   fi
+  echo "### Modify $4 ###"
   local key=$1
   local num=$2
   local p1=$(cat "$4" | head -n $(( key - 1 )) )
@@ -63,7 +64,13 @@ EOF
 
 if [ "$MOD_TYPE" = "CONSOLE" ]; then
   do_pre "$TAR2"
+  # Add input textfield and button
   modify_target "$KEY2" 1 "$REP2" "$TAR2"
+  # Hide gl-canvas on console-app
+  sed -i -e 's#<div class="emscripten_border">#<div hidden class="emscripten_border">#g' "$TAR2"
+  # Hide emscripten-switches
+  sed -i -e "s#^<span id='controls'>#<!--#g" "$TAR2"
+  sed -i -e "s#^</span>#-->#g" "$TAR2"
   do_post "$TAR2"
 else
   echo "Arguments error in modify.sh: Use arguments: tarFile modType"

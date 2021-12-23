@@ -51,7 +51,8 @@ do_log("console.log('Pre enable textfield %d')", 0);
         MAIN_THREAD_EM_ASM(document.getElementById('inputTxt').disabled = false;);
 do_log("console.log('Mid enable textfield %d')", 1);
         while(MAIN_THREAD_EM_ASM_INT(return document.getElementById('inputTxt').disabled;) != TRUE) { sleep(3); }
-do_log("console.log('Post enable textfield %d')", 2);
+        len = MAIN_THREAD_EM_ASM_INT(return document.getElementById('inputTxt').value.length;);
+do_log("console.log('Post enable textfield length=%d')", len);
       }
 do_log("console.log('Pre getchar %d')", 0);
       s32 ch = MAIN_THREAD_EM_ASM_INT(var el = document.getElementById('inputTxt'); var ch = el.value.charCodeAt(0); el.value = el.value.substr(1); return ch;);

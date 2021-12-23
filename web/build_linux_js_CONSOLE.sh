@@ -2,13 +2,11 @@
 
 #${GCCHOME} setup as: /usr/bin/gcc
 
-echo "First enter sudo access:"
+echo "First enter sudo access, needed for docker:"
 sudo echo "Continue..."
 cd .. || exit 3
 
 GCC="sudo docker run --rm -v $(pwd):/src emscripten/emsdk emcc"
-
-
 
 pre_cleanup()
 {
@@ -39,6 +37,7 @@ gcc_minijvm()
   if [ "$EXT_VAL" != "0" ]; then
     exit $EXT_VAL
   fi
+  sudo chown 1000:1000 web/build/*
 }
 
 set_vars()
