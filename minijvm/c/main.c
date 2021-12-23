@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
         }
     } else {
 #ifdef EMSCRIPTEN
-        bootclasspath = "asset_dir/lib/minijvm_rt.jar";
+        bootclasspath = "web/asset_dir/lib/minijvm_rt.jar";
 #else
         bootclasspath = "../../binary/lib/minijvm_rt.jar";
 
@@ -105,11 +105,12 @@ int main(int argc, char **argv) {
 //        classpath = "../../binary/libex/minijvm_test.jar;./";
 //        main_name = "test.HelloWorld";
 #ifdef EMSCRIPTEN
-        classpath = "asset_dir/lib/minijvm_test.jar";
+        classpath = "web/asset_dir/lib/minijvm_test.jar";
 #else
         classpath = "../../binary/libex/minijvm_test.jar;./";
 #endif
-        main_name = "test.HelloWorld";
+//        main_name = "test.HelloWorld";
+          main_name = "test.HelloConsole";
 //        main_name = "test.Foo1";
 //        main_name = "test.Foo2";
 //        main_name = "test.Foo3";

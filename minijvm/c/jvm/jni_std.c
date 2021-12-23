@@ -5,7 +5,10 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
-
+#if defined(EMSCRIPTEN)
+#include <unistd.h>
+#include <emscripten.h>
+#endif
 
 #if  defined(__JVM_OS_MAC__) || defined(__JVM_OS_LINUX__) || defined(EMSCRIPTEN)
 
@@ -29,8 +32,36 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//TODO: For debug only
+void do_log(char* msg, s32 num)
+{
+  char text[32];
+  sprintf(text, msg, num);
+  emscripten_run_script(text);
+}
+
 s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, JClass *clazz) {
+#ifdef EMSCRIPTEN
+      s32 len = MAIN_THREAD_EM_ASM_INT(return document.getElementById('inputTxt').value.length;);
+do_log("console.log('Textfiled length=%d')", len);
+
+      if (len == 0)
+      {
+do_log("console.log('Pre enable textfield %d')", 0);
+        MAIN_THREAD_EM_ASM(document.getElementById('inputTxt').disabled = false;);
+do_log("console.log('Mid enable textfield %d')", 1);
+        while(MAIN_THREAD_EM_ASM_INT(return document.getElementById('inputTxt').disabled;) != TRUE) { sleep(3); }
+do_log("console.log('Post enable textfield %d')", 2);
+      }
+do_log("console.log('Pre getchar %d')", 0);
+      s32 ch = MAIN_THREAD_EM_ASM_INT(var el = document.getElementById('inputTxt'); var ch = el.value.charCodeAt(0); el.value = el.value.substr(1); return ch;);
+do_log("console.log('Post getchar %d')", ch);
+      if (len == 1) { ch = -1; } // Last char was attached by code as end-marker
+
+#else
     s32 ch = getchar();
+#endif
+
 #if _JVM_DEBUG_LOG_LEVEL > 5
     invoke_deepth(runtime);
     jvm_printf("com_sun_cldc_io_ConsoleInputStream_read\n");
