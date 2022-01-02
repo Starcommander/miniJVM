@@ -18,7 +18,6 @@ public class Glfw {
             System.setProperty("gui.driver", "org.mini.glfw.GlfwCallBackImpl");
             System.setProperty("java.library.path", "./");
             System.loadLibrary("gui");
-
         }
         loaded = true;
     }
@@ -1660,6 +1659,8 @@ public class Glfw {
 		if (javaCallback) callback = env->NewGlobalRef(javaCallback);
      */
     public static native void glfwPollEvents();
+
+    public static native void executeMainLoop(); // Used on webassembly targets. Executes the main-loop repeatedly.
 
     public static native void glfwWaitEvents();
 

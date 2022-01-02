@@ -61,6 +61,7 @@ struct _GlobeRefer {
     MethodInfo *_callback_minial_on_send_frames;
     MethodInfo *_callback_minial_on_recv_frames;
     MethodInfo *_callback_minial_on_stop;
+    MethodInfo *_callback_main_loop;
 
     //
     Pairlist *runtime_list;

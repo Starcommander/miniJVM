@@ -5,9 +5,11 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
+#include "jni_wasm.h"
 #if defined(EMSCRIPTEN)
 #include <unistd.h>
 #include <emscripten.h>
+#include "../../../desktop/glfw_gui/c/media.h"
 #endif
 
 #if  defined(__JVM_OS_MAC__) || defined(__JVM_OS_LINUX__) || defined(EMSCRIPTEN)
@@ -38,6 +40,7 @@ void do_log(char* msg, s32 num)
   char text[32];
   sprintf(text, msg, num);
   emscripten_run_script(text);
+  free(msg);
 }
 
 s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, JClass *clazz) {
@@ -935,6 +938,17 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, JClass *clazz) {
 typedef void (*jni_fun)(__refer);
 
 s32 java_lang_System_loadLibrary0(Runtime *runtime, JClass *clazz) {
+#ifdef EMSCRIPTEN
+// See media.c: JNI_OnLoad(runtime->jvm);
+    memset(&refers, 0, sizeof(GlobeRefer));
+    JniEnv *env = runtime->jvm->env;
+    refers.jvm = runtime->jvm;
+    refers.env = env;
+    refers.runtime_list = env->pairlist_create(10);
+    runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_GlfwFuncTable(), count_GlfwFuncTable());
+    runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_GLFuncTable(), count_GLFuncTable());
+  return 0; // Actually we cannot load libraries on web
+#endif
     Instance *name_arr = localvar_getRefer(runtime->localvar, 0);
     if (name_arr && name_arr->arr_length) {
         Utf8String *lab = utf8_create_c("java.library.path");
@@ -971,6 +985,8 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, JClass *clazz) {
         utf8_append_c(libname, name_arr->arr_body);
 #if defined(__JVM_OS_MAC__)
         utf8_append_c(libname, ".dylib");
+#elif defined(EMSCRIPTEN)
+        utf8_append_c(libname, ".a");
 #else //__JVM_OS_LINUX__
         utf8_append_c(libname, ".so");
 #endif
@@ -1381,6 +1397,8 @@ static java_native_method METHODS_STD_TABLE[] = {
         {"com/sun/cldc/io/ConsoleOutputStream", "write",                  "(I)V",                                                          com_sun_cldc_io_ConsoleOutputStream_write},
         {"com/sun/cldc/io/ConsoleInputStream",  "read",                   "()I",                                                           com_sun_cldc_io_ConsoleInputStream_read},
         {"com/sun/cldc/io/ResourceInputStream", "open",                   "(Ljava/lang/String;)[B",                                        com_sun_cldc_io_ResourceInputStream_open},
+        {"org/mini/util/WasmUtil", "isWebAssembly",                   "()Z",                                        org_mini_util_WasmUtil_isWebAssembly},
+        {"org/mini/util/WasmUtil", "executeJS",                   "(Ljava/lang/String;)",                                        org_mini_util_WasmUtil_executeJS},
 //        {"com/sun/cldc/io/Waiter",              "waitForIO",       "",         com_sun_cldc_io_ResourceInputStream_waitForIO},
         {"java/lang/Class",                     "forName",                "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;", java_lang_Class_forName},
         {"java/lang/Class",                     "newInstance",            "()Ljava/lang/Object;",                                          java_lang_Class_newInstance},

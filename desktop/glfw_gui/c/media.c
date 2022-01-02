@@ -2,11 +2,9 @@
 // Created by Gust on 2018/2/1.
 //
 
-
 #include "jvm_util.h"
 #include "jvm.h"
 #include "media.h"
-
 
 void JNI_OnLoad(MiniJVM *jvm) {
     memset(&refers, 0, sizeof(GlobeRefer));
@@ -40,19 +38,19 @@ Runtime *getRuntimeCurThread(JniEnv *env) {
         runtime = env->runtime_create(refers.jvm);
         env->thread_boundle(runtime);
         env->jthread_set_daemon_value(runtime->thrd_info->jthread, runtime, 1);
+
+#ifdef EMSCRIPTEN
+        if (refers.runtime_list->_alloced == 0)
+        { //TODO: As a workaround, it seems loadLibrary was executed in wrong thread?
+          //  refers.jvm = jvm;
+          refers.env = env;
+          refers.runtime_list = env->pairlist_create(10);
+        }
+#endif
+
         env->pairlist_put(refers.runtime_list, (__refer) (intptr_t) t, runtime);
     }
 
     return env->getLastSon(runtime);//
 }
 
-/* ===============================================================
- *
- *                          DEMO
- *
- * ===============================================================*/
-
-int main(void) {
-
-    return 0;
-}
