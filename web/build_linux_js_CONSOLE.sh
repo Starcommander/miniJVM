@@ -30,8 +30,9 @@ gcc_minijvm()
 
   echo "Using compiler: ${GCC}"
   mkdir -p web/build
+  INCL_APP="-I${CSRC}/jvm -I${CSRC}/utils/ -I${CSRC}/utils/sljit/ -I${CSRC}/utils/https/ -I${CSRC}/utils/https/mbedtls/include/"
 
-  ${GCC} -o web/build/mini_jvm.html $DO_PRE $DO_THREAD_SWITCH $MEM_SWITCH -I${CSRC}/jvm -I${CSRC}/utils/ -I${CSRC}/utils/sljit/ -I${CSRC}/utils/https/ -I${CSRC}/utils/https/mbedtls/include/ $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl
+  ${GCC} -o web/build/mini_jvm.html $DO_PRE $DO_THREAD_SWITCH $MEM_SWITCH $INCL_APP $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl
   EXT_VAL=$?
   echo "Build exit value: $EXT_VAL"
   if [ "$EXT_VAL" != "0" ]; then
@@ -68,11 +69,12 @@ set_vars()
   MEM_SWITCH="-s INITIAL_MEMORY=33554432"
 
   # Dynamic linking leads to error
-  DYN_LINK_SWITCH="--use-preload-plugins -s MAIN_MODULE=2"
+  #DYN_LINK_SWITCH="--use-preload-plugins -s MAIN_MODULE=2"
 
   # Call this the main_module to allow linking to side-module ($1)
-  MODULE_SWITCH="-s MAIN_MODULE"
+  #MODULE_SWITCH="-s MAIN_MODULE"
 }
+
 set_vars
 pre_cleanup
 copy_asset

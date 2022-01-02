@@ -1,14 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Requirement: jdk1.8 jar javac "
+cd $(dirname $0)
 
 JAVAC=javac
 JAR=jar
 
 
-build_jar(){
+build_jar() # Args: jarName srcPath tarPath bootCP cp
+{
     rm -rf $3/$1
-    mkdir classes 
+    mkdir classes
     find $2/java -name "*.java" >source.txt
     ${JAVAC} -bootclasspath $4 -cp $5 -encoding "utf-8" -d classes @source.txt
     cp -R $2/resource/* classes/
@@ -18,16 +20,30 @@ build_jar(){
     mv $1 $3/
 }
 
+ask_build() # Args: msg
+{
+  echo "$1 [y,n]"
+  read -e -p ">>> " INPUT
+  if [ "$INPUT" = "y" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 mkdir lib
 mkdir libex
 
-echo "build lib/minijvm_rt.jar"
+if ask_build "build lib/minijvm_rt.jar" ; then
 $(build_jar minijvm_rt.jar ../minijvm/java/src/main lib "." ".")
+fi
 
-echo "build libex/glfw_gui.jar"
+if ask_build "build libex/glfw_gui.jar" ; then
 $(build_jar glfw_gui.jar ../desktop/glfw_gui/java/src/main libex "lib/minijvm_rt.jar" ".")
+fi
 
-echo "build libex/minijvm_test.jar"
+if ask_build "build libex/minijvm_test.jar" ; then
 $(build_jar minijvm_test.jar ../test/minijvm_test/src/main libex "lib/minijvm_rt.jar" ".")
+fi
 
 
