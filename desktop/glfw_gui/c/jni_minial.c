@@ -262,7 +262,7 @@ int org_mini_media_MiniAL_ma_decoder_read(Runtime *runtime, JClass *clazz) {
 
     if (handle_decoder) {
 
-        s32 v = (ma_uint32) ma_decoder_read_pcm_frames(handle_decoder, pSamples, frameCount);
+        s32 v = (ma_uint32) ma_decoder_read_pcm_frames(handle_decoder, pSamples, frameCount, NULL);
         env->push_int(runtime->stack, v);
     } else {
         env->push_int(runtime->stack, -1);
