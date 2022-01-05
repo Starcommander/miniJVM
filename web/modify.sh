@@ -37,12 +37,12 @@ do_post() # Args: tarFile
 }
 
 # Currently not used.
-TAR1="$TAR_DIR/mini_jvm.js"
+TAR1="$TAR_DIR/index.js"
 KEY1=""
 REP1=""
 
 # For Console-App: Add input-textfield and button
-TAR2="$TAR_DIR/mini_jvm.html"
+TAR2="$TAR_DIR/index.html"
 KEY2=$(cat "$TAR2" | grep -n '<textarea id="output"' | awk '{ print $1 }' | tr -d ':')
 REP2=$(cat <<EOF
   <textarea id="output" rows="8" readonly="readonly"></textarea>

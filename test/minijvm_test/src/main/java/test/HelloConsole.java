@@ -40,8 +40,8 @@ class HelloConsole {
         try
         {
           int age = Integer.parseInt(ageS);
-          if (age >= 50) { System.out.println("You are an old man. (>=50)."); }
-          else { System.out.println("You are a young guy. (<50)."); }
+          if (age >= 50) { System.out.println("You are an old man/woman. (>=50)."); }
+          else { System.out.println("You are a young guy/girl. (<50)."); }
         } catch (Exception e) { System.out.println("You dont have a valid age."); }
       }
       else

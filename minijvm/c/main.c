@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 
 #ifdef EMSCRIPTEN_WINAPP
         classpath = "lib/glfw_gui.jar";
-#else if defined (EMSCRIPTEN_CONSOLE)
+#elif defined (EMSCRIPTEN_CONSOLE)
         classpath = "lib/minijvm_test.jar";
 #else
         classpath = "../../binary/libex/minijvm_test.jar;./";
