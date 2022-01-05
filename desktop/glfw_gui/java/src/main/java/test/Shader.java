@@ -2,6 +2,7 @@ package test;
 
 import org.mini.gl.GL;
 import org.mini.glwrap.GLUtil;
+import org.mini.util.WasmUtil;
 
 import static org.mini.gl.GL.*;
 import static org.mini.glfw.Glfw.*;
@@ -61,6 +62,13 @@ public class Shader {
         @Override
         public void framebufferSize(long window, int x, int y) {
         }
+
+        @Override
+        public void mainLoop(){
+          display();
+          glfwPollEvents();
+          glfwSwapBuffers(curWin);
+        }
     }
 
     int loadShader(int shaderType, String shaderStr) {
@@ -117,18 +125,19 @@ public class Shader {
 //            + "{  \n"
 //            + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
 //            + "}  ";
-    String s_v = "#version 330 \n"
+    String SHADER_VERS= WasmUtil.isWebAssembly() ? "300 es" : "330 ";
+    String s_v = "#version " + SHADER_VERS + "\n"
             + "layout(location = 0) in vec4 vPosition; \n"
             + "\n"
             + "void main(){ \n"
             + "gl_Position=vPosition; \n"
-            + "} \n";
-    String s_f = "#version 330 \n"
+            + "}\n";
+    String s_f = "#version " + SHADER_VERS + "\n"
             + "precision mediump float; \n"
             + "out vec4 fragColor; \n"
             + "void main(){ \n"
             + "fragColor=vec4(1.0,0.0,0.0,1.0); \n"
-            + "} \n";
+            + "}\n";
 
     int vaoIndex = 0, vaoCount = 1;
     int bufIndex = 0, bufCount = 1;
@@ -191,7 +200,7 @@ public class Shader {
         glDrawArrays(GL_TRIANGLES, 0, vecCount);
 
         try {
-            Thread.sleep(10);
+            Thread.sleep(1);
         } catch (InterruptedException ex) {
         }
 
@@ -217,20 +226,8 @@ public class Shader {
             init();
             long last = System.currentTimeMillis(), now;
             int count = 0;
-            while (!glfwWindowShouldClose(win)) {
-
-                display();
-
-                glfwPollEvents();
-                glfwSwapBuffers(win);
-                count++;
-                now = System.currentTimeMillis();
-                if (now - last > 1000) {
-                    System.out.println("fps:" + count);
-                    last = now;
-                    count = 0;
-                }
-            }
+            curWin = win;
+            executeMainLoop();
             glfwTerminate();
         }
     }

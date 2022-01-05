@@ -16,7 +16,13 @@
 
 #include <nanovg/nanovg.h>
 #include <nanovg/nanovg_jni_assist.h>
+
+#ifdef EMSCRIPTEN
+#define NANOVG_GLES3_IMPLEMENTATION
+#else
 #define NANOVG_GL3_IMPLEMENTATION
+#endif
+
 #include <nanovg/nanovg_gl.h>
 
 
@@ -1927,7 +1933,11 @@ int org_mini_nanovg_Nanovg_nvgCreateGL3(Runtime *runtime, JClass *clazz) {
     
     s32 pflags = env->localvar_getInt(runtime->localvar, pos++);
 
+#ifdef EMSCRIPTEN
+    NVGcontext*/*ptr*/ _re_val = nvgCreateGLES3((int)pflags);
+#else
     NVGcontext*/*ptr*/ _re_val = nvgCreateGL3((int)pflags);
+#endif
     s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
     
     return 0;
@@ -1939,7 +1949,11 @@ int org_mini_nanovg_Nanovg_nvgDeleteGL3(Runtime *runtime, JClass *clazz) {
     
     intptr_t pctx = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
 
+#ifdef EMSCRIPTEN
+    nvgDeleteGLES3((NVGcontext*/*ptr*/)(pctx));
+#else
     nvgDeleteGL3((NVGcontext*/*ptr*/)(pctx));
+#endif
     
     
     return 0;
@@ -1955,7 +1969,11 @@ int org_mini_nanovg_Nanovg_nvglCreateImageFromHandleGL3(Runtime *runtime, JClass
     s32 ph = env->localvar_getInt(runtime->localvar, pos++);
     s32 pflags = env->localvar_getInt(runtime->localvar, pos++);
 
+#ifdef EMSCRIPTEN
+    int _re_val = nvglCreateImageFromHandleGLES3((NVGcontext*/*ptr*/)(pctx), (GLuint)ptextureId, (int)pw, (int)ph, (int)pflags);
+#else
     int _re_val = nvglCreateImageFromHandleGL3((NVGcontext*/*ptr*/)(pctx), (GLuint)ptextureId, (int)pw, (int)ph, (int)pflags);
+#endif
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
@@ -1968,7 +1986,11 @@ int org_mini_nanovg_Nanovg_nvglImageHandleGL3(Runtime *runtime, JClass *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
     s32 pimage = env->localvar_getInt(runtime->localvar, pos++);
 
+#ifdef EMSCRIPTEN
+    GLuint _re_val = nvglImageHandleGLES3((NVGcontext*/*ptr*/)(pctx), (int)pimage);
+#else
     GLuint _re_val = nvglImageHandleGL3((NVGcontext*/*ptr*/)(pctx), (int)pimage);
+#endif
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;

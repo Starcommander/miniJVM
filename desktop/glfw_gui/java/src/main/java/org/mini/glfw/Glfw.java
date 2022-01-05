@@ -1660,7 +1660,7 @@ public class Glfw {
      */
     public static native void glfwPollEvents();
 
-    public static native void executeMainLoop(); // Used on webassembly targets. Executes the main-loop repeatedly.
+    public static native void executeMainLoop(); // Executes the main-loop repeatedly.
 
     public static native void glfwWaitEvents();
 

@@ -148,8 +148,11 @@ public interface GlfwCallback {
      * @param paths 
      */
     public void drop(long window, int count, String[] paths);
-    
-    
+
+    /**
+     * Executed repeatedly.
+     * @see org.mini.glfw.Glfw#startMainLoop()
+     */
     public void mainLoop();
 
 }

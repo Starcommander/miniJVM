@@ -72,6 +72,8 @@ if [ "$MOD_TYPE" = "CONSOLE" ]; then
   sed -i -e "s#^<span id='controls'>#<!--#g" "$TAR2"
   sed -i -e "s#^</span>#-->#g" "$TAR2"
   do_post "$TAR2"
+elif [ "$MOD_TYPE" = "WINAPP" ]; then
+  echo "Nothing to modify..."
 else
   echo "Arguments error in modify.sh: Use arguments: tarFile modType"
 fi

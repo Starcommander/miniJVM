@@ -32,7 +32,7 @@ gcc_minijvm()
   mkdir -p web/build
   INCL_APP="-I${CSRC}/jvm -I${CSRC}/utils/ -I${CSRC}/utils/sljit/ -I${CSRC}/utils/https/ -I${CSRC}/utils/https/mbedtls/include/"
 
-  ${GCC} -o web/build/mini_jvm.html $DO_PRE $DO_THREAD_SWITCH $MEM_SWITCH $INCL_APP $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl
+  ${GCC} -o web/build/index.html $APP_SWITCH $DO_PRE $DO_THREAD_SWITCH $MEM_SWITCH $INCL_APP $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl
   EXT_VAL=$?
   echo "Build exit value: $EXT_VAL"
   if [ "$EXT_VAL" != "0" ]; then
@@ -47,9 +47,11 @@ set_vars()
   CSRC="minijvm/c"
   CSRC_GUI="desktop/glfw_gui/c"
 
+  APP_SWITCH="-D EMSCRIPTEN_CONSOLE"
+
   ##Execute local files is not possible
   #You have to preload files that are accessable
-  DO_PRE="--preload-file web/asset_dir"
+  DO_PRE="--preload-file web/asset_dir@/"
 
   ##Using threads is not easy.
   #You have to enable the apache_mod mod_headers

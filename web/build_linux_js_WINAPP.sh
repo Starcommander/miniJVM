@@ -36,7 +36,7 @@ gcc_minijvm()
   INCL_GUI="-I${CSRC_GUI}/deps/include/"
   INCL_APP="-I${CSRC}/jvm -I${CSRC}/utils/ -I${CSRC}/utils/sljit/ -I${CSRC}/utils/https/ -I${CSRC}/utils/https/mbedtls/include/"
 
-  ${GCC} -o web/build/mini_jvm.html $DO_PRE $DO_THREAD_SWITCH $ALL_SWITCH $GLFW_SWITCH $DYN_LINK_SWITCH $MEM_SWITCH $INCL_GUI $INCL_APP $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl -lglfw3
+  ${GCC} -o web/build/index.html $APP_SWITCH $DO_PRE $DO_THREAD_SWITCH $ALL_SWITCH $GLFW_SWITCH $DYN_LINK_SWITCH $MEM_SWITCH $INCL_GUI $INCL_APP $DO_THREADS $SRCLIST ${CSRC}/utils/sljit/sljitLir.c -pthread  -lpthread -lm -ldl -lglfw3
   EXT_VAL=$?
   echo "Build exit value: $EXT_VAL"
   if [ "$EXT_VAL" != "0" ]; then
@@ -51,9 +51,11 @@ set_vars()
   CSRC="minijvm/c"
   CSRC_GUI="desktop/glfw_gui/c"
 
+  APP_SWITCH="-D EMSCRIPTEN_WINAPP"
+
   ##Execute local files is not possible
   #You have to preload files that are accessable
-  DO_PRE="--preload-file web/asset_dir"
+  DO_PRE="--preload-file web/asset_dir@/"
 
   ##Using threads is not easy.
   #You have to enable the apache_mod mod_headers
@@ -72,10 +74,11 @@ set_vars()
   # Not enough memory error fix
   # A slow solution: MEM_SWITCH="-s ALLOW_MEMORY_GROWTH=1"
   #MEM_SWITCH="-s INITIAL_MEMORY=33554432"
-  MEM_SWITCH="-s INITIAL_MEMORY=67108864"
+  #MEM_SWITCH="-s INITIAL_MEMORY=67108864"
+  MEM_SWITCH="-s INITIAL_MEMORY=67108864 -s ALLOW_MEMORY_GROWTH=1"
 
   # Dynamic linking leads to error
-  DYN_LINK_SWITCH="--use-preload-plugins -s MAIN_MODULE=2"
+  #DYN_LINK_SWITCH="--use-preload-plugins -s MAIN_MODULE=2"
 
   # Call this the main_module to allow linking to side-module ($1)
   #MODULE_SWITCH="-s MAIN_MODULE"
@@ -96,5 +99,5 @@ set_vars
 pre_cleanup
 copy_asset
 gcc_minijvm
-#./web/modify.sh "web/build/" "WINAPP"
+./web/modify.sh "web/build/" "WINAPP"
 echo "Files stored in web/build/"

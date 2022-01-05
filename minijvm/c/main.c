@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
         }
     } else {
 #ifdef EMSCRIPTEN
-        bootclasspath = "web/asset_dir/lib/minijvm_rt.jar";
+        bootclasspath = "lib/minijvm_rt.jar";
 #else
         bootclasspath = "../../binary/lib/minijvm_rt.jar";
 
@@ -84,9 +84,14 @@ int main(int argc, char **argv) {
         classpath = "../../binary/libex/glfw_gui.jar;./";
 //        main_name = "test.Gears";
 //        main_name = "test.TestGL";
-        main_name = "org.mini.glfw.GlfwMain";
+#ifdef EMSCRIPTEN_CONSOLE
+        main_name = "test.HelloConsole";
+#else
+        main_name = "test.AppManagerTest";
+#endif
 //        main_name = "test.RenderTexure";
 //        main_name = "test.Alpha";
+//        main_name = "test.TestAudio";
 //        main_name = "test.Light";
 //        main_name = "test.Shader";
 //        main_name = "test.Shader1";
@@ -102,15 +107,15 @@ int main(int argc, char **argv) {
 
 
 
-//        classpath = "../../binary/libex/minijvm_test.jar;./";
-//        main_name = "test.HelloWorld";
-#ifdef EMSCRIPTEN
-        classpath = "web/asset_dir/lib/minijvm_test.jar";
+#ifdef EMSCRIPTEN_WINAPP
+        classpath = "lib/glfw_gui.jar";
+#else if defined (EMSCRIPTEN_CONSOLE)
+        classpath = "lib/minijvm_test.jar";
 #else
         classpath = "../../binary/libex/minijvm_test.jar;./";
 #endif
 //        main_name = "test.HelloWorld";
-          main_name = "test.HelloConsole";
+//          main_name = "test.HelloConsole";
 //        main_name = "test.Foo1";
 //        main_name = "test.Foo2";
 //        main_name = "test.Foo3";

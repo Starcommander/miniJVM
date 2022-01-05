@@ -40,7 +40,7 @@ public class GlfwCallBackImpl extends GCallBack {
     int CLICK_PERIOD = 200;
 
     boolean drag;
-    int hoverX, hoverY;//mouse
+    int hoverX, hoverY;//mouse 
     int buttonOnDrag;
 
     long vg;
@@ -139,42 +139,18 @@ public class GlfwCallBackImpl extends GCallBack {
 
     @Override
     public void mainLoop() {
-        //
-        long last = System.currentTimeMillis(), now;
-        int count = 0;
-
-        long startAt, cost;
-        while (!glfwWindowShouldClose(display)) {
-            try {
-//                startAt = System.currentTimeMillis();
-                if (!gform.isInited()) {
-                    gform.init();
-                }
-                //user define contents
-                if (GObject.flushReq()) {
-                    gform.display(vg);
-                    glfwSwapBuffers(display);
-                }
-                glfwPollEvents();
-//                count++;
-//                now = System.currentTimeMillis();
-//                if (now - last > 1000) {
-//                    //System.out.println("fps:" + count);
-//                    fps = count;
-//                    last = now;
-//                    count = 0;
-//                }
-//
-//                cost = now - startAt;
-//                if (cost < 1000 / fpsExpect) {
-//                    Thread.sleep((long) (1000 / fpsExpect - cost));
-//                }
-                Sync.sync((int) fpsExpect);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-
+        try {
+            if (!gform.isInited()) {
+                gform.init();
             }
-        }
+            //user define contents
+            if (GObject.flushReq()) {
+                gform.display(vg);
+                glfwSwapBuffers(display);
+            }
+            glfwPollEvents();
+            Sync.sync((int) fpsExpect);
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     public void destroy() {

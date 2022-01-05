@@ -9,6 +9,8 @@
 #if defined(EMSCRIPTEN)
 #include <unistd.h>
 #include <emscripten.h>
+#endif
+#if defined(EMSCRIPTEN_WINAPP)
 #include "../../../desktop/glfw_gui/c/media.h"
 #endif
 
@@ -35,7 +37,7 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, JClass *clazz) {
 }
 
 s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, JClass *clazz) {
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN_CONSOLE)
       s32 len = MAIN_THREAD_EM_ASM_INT(return document.getElementById('inputTxt').value.length;);
 
       if (len == 0)
@@ -46,7 +48,8 @@ s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, JClass *clazz) {
       }
       s32 ch = MAIN_THREAD_EM_ASM_INT(var el = document.getElementById('inputTxt'); var ch = el.value.charCodeAt(0); el.value = el.value.substr(1); return ch;);
       if (len == 1) { ch = -1; } // Last char was attached by code as end-marker
-
+#elif defined(EMSCRIPTEN_WINAPP)
+    s32 ch = -1;
 #else
     s32 ch = getchar();
 #endif
@@ -923,16 +926,18 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, JClass *clazz) {
 typedef void (*jni_fun)(__refer);
 
 s32 java_lang_System_loadLibrary0(Runtime *runtime, JClass *clazz) {
-#ifdef EMSCRIPTEN
+#ifdef EMSCRIPTEN_WINAPP
 // See media.c: JNI_OnLoad(runtime->jvm);
     memset(&refers, 0, sizeof(GlobeRefer));
     JniEnv *env = runtime->jvm->env;
     refers.jvm = runtime->jvm;
     refers.env = env;
     refers.runtime_list = env->pairlist_create(10);
+    runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_MiniALFuncTable(), count_MiniALFuncTable());
     runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_GlfwFuncTable(), count_GlfwFuncTable());
     runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_GLFuncTable(), count_GLFuncTable());
-  return 0; //TODO: Actually we cannot load libraries on web
+    runtime->jvm->env->native_reg_lib(runtime->jvm, ptr_NutilFuncTable(), count_NutilFuncTable());
+  return 0; //TODO: Actually we cannot load libraries on web, and this workaround is for WINAPP only
 #endif
     Instance *name_arr = localvar_getRefer(runtime->localvar, 0);
     if (name_arr && name_arr->arr_length) {

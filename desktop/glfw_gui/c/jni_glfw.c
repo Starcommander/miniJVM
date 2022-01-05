@@ -316,6 +316,15 @@ void _callback_main_loop() {
     if (refers._callback_main_loop) {
 #ifdef EMSCRIPTEN
         Runtime *runtime = getRuntimeCurThread(refers.env);
+        // Check if stopping is requested.
+        s32 pos = 0;
+        GLFWwindow *window = (__refer) (intptr_t) runtime->jnienv->localvar_getLong_2slot(runtime->localvar, pos);
+        if (GL_TRUE == glfwWindowShouldClose((GLFWwindow *) window))
+        {
+          emscripten_cancel_main_loop();
+          glfwTerminate();
+          return;
+        }
 #else
         Runtime *runtime = refers.runtime;
 #endif
@@ -1019,14 +1028,18 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, JClass *clazz) {
                 env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type, clazz->jloader, runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
-//        emscripten_set_main_loop(_callback_main_loop, 0, 1);
     }
     return 0;
 }
 
 int org_mini_glfw_Glfw_executeMainLoop(Runtime *runtime, JClass *clazz) {
 #ifdef EMSCRIPTEN
-    emscripten_set_main_loop(_callback_main_loop, 1, 1);
+    emscripten_set_main_loop(_callback_main_loop, 0, 1);
+#else
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
+    while (GL_TRUE == glfwWindowShouldClose((GLFWwindow *) window)) { _callback_main_loop(); } //TODO: Not tested yet
 #endif
     return 0;
 }
