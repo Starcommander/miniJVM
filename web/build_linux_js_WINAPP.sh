@@ -85,7 +85,7 @@ set_vars()
 
   # Ensure ALL is exported.
   #ALL_SWITCH="-s EXPORT_ALL=1 -s LINKABLE=1"
-  ALL_SWITCH="-s EXPORT_ALL=1 -s EXPORTED_RUNTIME_METHODS=printErr -s ERROR_ON_UNDEFINED_SYMBOLS=0"
+  ALL_SWITCH="-s EXPORT_ALL=1 -s EXPORTED_RUNTIME_METHODS=printErr,ccall -s ERROR_ON_UNDEFINED_SYMBOLS=0"
   #ALL_SWITCH="-s EXPORT_ALL=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0"
   #ALL_SWITCH="-s EXPORT_ALL=1 -s EXPORTED_FUNCTIONS=_main,_org_mini_glfw_Glfw_glfwCreateWindow,_glfwDestroyWindow,_glfwGetClipboardString,_glfwGetFramebufferSize,_glfwMakeContextCurrent,_glfwSetClipboardString,_glfwSetCursorEnterCallback,_glfwSetCursorPosCallback,_glfwSetDropCallback,_glfwSetErrorCallback,_glfwSetFramebufferSizeCallback,_glfwSetScrollCallback,_glfwSetWindowAspectRatio,_glfwSetWindowFocusCallback,_glfwSetWindowIconifyCallback,_glfwSetWindowPosCallback,_glfwSetWindowShouldClose,_glfwWindowHint,_glfwWindowShouldClose"
 #  ALL_SWITCH="-O0 -s EXPORTED_FUNCTIONS=_main,_org_mini_glfw_Glfw_glfwInitJni,_glfwSetErrorCallback -s ERROR_ON_UNDEFINED_SYMBOLS=0"

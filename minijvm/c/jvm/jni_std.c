@@ -1388,7 +1388,7 @@ static java_native_method METHODS_STD_TABLE[] = {
         {"com/sun/cldc/io/ConsoleInputStream",  "read",                   "()I",                                                           com_sun_cldc_io_ConsoleInputStream_read},
         {"com/sun/cldc/io/ResourceInputStream", "open",                   "(Ljava/lang/String;)[B",                                        com_sun_cldc_io_ResourceInputStream_open},
         {"org/mini/util/WasmUtil", "isWebAssembly",                   "()Z",                                        org_mini_util_WasmUtil_isWebAssembly},
-        {"org/mini/util/WasmUtil", "executeJS",                   "(Ljava/lang/String;)",                                        org_mini_util_WasmUtil_executeJS},
+        {"org/mini/util/WasmUtil", "executeJS",                   "(Ljava/lang/String;)V",                                        org_mini_util_WasmUtil_executeJS},
 //        {"com/sun/cldc/io/Waiter",              "waitForIO",       "",         com_sun_cldc_io_ResourceInputStream_waitForIO},
         {"java/lang/Class",                     "forName",                "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;", java_lang_Class_forName},
         {"java/lang/Class",                     "newInstance",            "()Ljava/lang/Object;",                                          java_lang_Class_newInstance},

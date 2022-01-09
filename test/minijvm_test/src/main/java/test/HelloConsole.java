@@ -15,7 +15,7 @@ class HelloConsole {
           if (count > 0)
           {
             String name = new String(buffer, 0, count);
-            System.out.println("Your name: '" + name + "' has " + name.length() + " digits.");
+            System.out.println("Your name: '" + name + "' has " + name.length() + " letters.");
             askAge();
           }
           else
@@ -27,6 +27,7 @@ class HelloConsole {
         {
           System.err.println("Error reading input.");
         }
+        System.err.println("Finish. Exiting app.");
     }
 
     private static void askAge() throws IOException

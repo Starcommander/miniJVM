@@ -7,6 +7,7 @@ package org.mini.glfm;
 
 import org.mini.glfw.Glfw;
 import org.mini.gui.GCallBack;
+import org.mini.util.WasmUtil;
 
 /**
  * @author gust
@@ -110,7 +111,13 @@ public class Glfm {
     }
 
     public static void glfmSetKeyboardVisible(long display, boolean visible) {
-
+      if (WasmUtil.isWebAssembly())
+      {
+        if (visible) // Workaround mobile virtual keyboard
+        {
+          WasmUtil.executeJS("if ('virtualKeyboard' in navigator) { document.getElementById('inputTxt').focus(); }");
+        }
+      }
     }
 
     public static boolean glfmGetKeyboardVisible(long display) {

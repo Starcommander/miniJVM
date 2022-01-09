@@ -10,10 +10,11 @@ char* jstring_to_chars(Instance *jstr, Runtime *runtime) {
     if (ptr && ptr->arr_body)
     {
       u16 *jchar_arr = (u16 *) ptr->arr_body;
-      char *chars = (char *) malloc(count - offset);
+      char *chars = (char *) malloc(count - offset + 1);
 //[count - offset];
       u32 i = 0;
       for (i=0; i<count; i++) chars[i] = jchar_arr[i+offset];
+      chars[count] = 0; // Terminate with null-char
       return chars;
     }
     char *empty_ch = (char *)malloc(0);
@@ -49,11 +50,8 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz)
   Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
   char* chars = jstring_to_chars(jstr, runtime);
 
-
-//  char* text =env->GetStringUTFChars(textj, NULL);
   emscripten_run_script(chars);
   free(chars);
-//  env->ReleaseStringUTFChars(textj, text);
 #endif
   return 0;
 }

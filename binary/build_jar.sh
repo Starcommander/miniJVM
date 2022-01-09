@@ -13,7 +13,9 @@ build_jar() # Args: jarName srcPath tarPath bootCP cp
     mkdir classes
     find $2/java -name "*.java" >source.txt
     ${JAVAC} -bootclasspath $4 -cp $5 -encoding "utf-8" -d classes @source.txt
-    cp -R $2/resource/* classes/
+    if [ -d $2/resource/ ]; then
+      cp -R $2/resource/* classes/
+    fi
     ${JAR} cf $1 -C classes ./
     rm -rf source.txt
     rm -rf classes

@@ -46,7 +46,7 @@ TAR2="$TAR_DIR/index.html"
 KEY2=$(cat "$TAR2" | grep -n '<textarea id="output"' | awk '{ print $1 }' | tr -d ':')
 REP2=$(cat <<EOF
   <textarea id="output" rows="8" readonly="readonly"></textarea>
-  <input type="text" id="inputTxt" disabled="disabled"> <!-- Hugo -->
+  <input type="text" id="inputTxt" disabled="disabled" /> <!-- Starcommander mod -->
   <button onclick="submitInputStream()">Submit</button>
   <script>
     function submitInputStream()
@@ -56,6 +56,46 @@ REP2=$(cat <<EOF
       {
         el.value = el.value + " ";
         el.disabled = true;
+      }
+    }
+  </script>
+EOF
+)
+
+# function submitKeyDown(event)
+# {
+#   console.log('Key down: KEY=' + event.key + " CODE=" + event.code + " LOCALE=" + event.locale + " LOC=" + event.location);
+# }
+
+REP_GUIINPUT=$(cat <<EOF
+  <textarea id="output" rows="8" readonly="readonly"></textarea>
+  <input type="text" id="inputTxt" value="X" oninput="submitInput(event)" autocomplete="off" style="width: 0px; height: 0px; position: absolute; top: -9999px;" />
+  <script> <!-- Starcommander mod -->
+    function submitInput(event)
+    {
+      if (event.inputType = 'insertText')
+      {
+//        console.log('Key press: ' + event.data);
+        Module.ccall('callback_key_js', // name of C function
+          '', // return type
+          ['number','number'], // argument types
+          [event.data.charCodeAt(0), 0]); // arguments
+      }
+      else if (event.inputType = 'insertLineBreak')
+      {
+        console.log('Key press: ENTER');
+      }
+      else if (event.inputType = 'insertFromPaste')
+      {
+        console.log('Key paste: ' + event.data);
+      }
+      else if (event.inputType = 'deleteByComposition')
+      {
+        console.log('Key press: deleteByComposition');
+      }
+      else if (event.inputType = 'deleteContentBackward')
+      {
+        console.log('Key press: deleteContentBackward');
       }
     }
   </script>
@@ -73,7 +113,9 @@ if [ "$MOD_TYPE" = "CONSOLE" ]; then
   sed -i -e "s#^</span>#-->#g" "$TAR2"
   do_post "$TAR2"
 elif [ "$MOD_TYPE" = "WINAPP" ]; then
-  echo "Nothing to modify..."
+  do_pre "$TAR2"
+  modify_target "$KEY2" 1 "$REP_GUIINPUT" "$TAR2"
+  do_post "$TAR2"
 else
   echo "Arguments error in modify.sh: Use arguments: tarFile modType"
 fi

@@ -99,6 +99,28 @@ static void _callback_character(GLFWwindow *window, u32 ch) {
     }
 }
 
+#ifdef EMSCRIPTEN
+EMSCRIPTEN_KEEPALIVE
+void callback_key_js(int key, int special)
+{
+EM_ASM(console.log('Key PRE from js: ' + $0), key);
+  Runtime *runtime = getRuntimeCurThread(refers.env);
+  s32 pos = 0;
+  GLFWwindow *window = (__refer) (intptr_t) runtime->jnienv->localvar_getLong_2slot(runtime->localvar, pos);
+//  _callback_key(window, key, scancode, action, mods);
+  if (special == 1) // Delete
+  {
+    _callback_key(window, 259, 8, 1, 0);
+    _callback_key(window, 259, 8, 0, 0);
+  }
+  else
+  {
+    _callback_character(window, key);
+  }
+EM_ASM(console.log('Key POST from js: ' + $0), key);
+}
+#endif
+
 static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
     if (refers._callback_drop) {
 #ifdef EMSCRIPTEN
