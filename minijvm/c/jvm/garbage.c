@@ -285,6 +285,10 @@ s32 _gc_thread_run(void *para) {
  * @return ret
  */
 s64 _garbage_collect(GcCollector *collector) {
+#ifdef EMSCRIPTEN
+//TODO: Find and solve Deadlock
+return 0;
+#endif
     collector->isgc = 1;
     s64 mem_total = 0, mem_free = 0;
     s64 del = 0;
@@ -302,20 +306,26 @@ s64 _garbage_collect(GcCollector *collector) {
             jvm_printf("gc canceled ");
             return -1;
         }
-        //jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time));
-        //time = currentTimeMillis();
+#if _JVM_DEBUG_GARBAGE
+        jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time));
+        time = currentTimeMillis();
+#endif
         if (collector->tmp_header) {
             collector->tmp_tailer->next = collector->header;//接起来
             collector->header = collector->tmp_header;
             collector->tmp_header = NULL;
             collector->tmp_tailer = NULL;
         }
-        //jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
-        //time = currentTimeMillis();
+#if _JVM_DEBUG_GARBAGE
+        jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
+        time = currentTimeMillis();
+#endif
         _gc_copy_objs(jvm);
         //
-        //jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
-        //time = currentTimeMillis();
+#if _JVM_DEBUG_GARBAGE
+        jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
+        time = currentTimeMillis();
+#endif
         //real GC start
         //
         collector->mark_cnt++;
@@ -324,14 +334,19 @@ s64 _garbage_collect(GcCollector *collector) {
         }
         _gc_big_search(collector);
         //
-        //jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
-        //time = currentTimeMillis();
+#if _JVM_DEBUG_GARBAGE
+        jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
+        time = currentTimeMillis();
+#endif
 
         _gc_resume_the_world(jvm);
     }
     vm_share_unlock(jvm);
 
-//    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time));
+#if _JVM_DEBUG_GARBAGE
+    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
+#endif
 
     s64 time_stopWorld = currentTimeMillis() - start;
     time = currentTimeMillis();
@@ -367,8 +382,10 @@ s64 _garbage_collect(GcCollector *collector) {
         }
     }
 
-//    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
-//    time = currentTimeMillis();
+#if _JVM_DEBUG_GARBAGE
+    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
+#endif
     //clear
     nextmb = collector->header;
     prevmb = NULL;
@@ -431,7 +448,9 @@ s32 _gc_pause_the_world(MiniJVM *jvm) {
     GcCollector *collector = jvm->collector;
     ArrayList *thread_list = jvm->thread_list;
     s32 i;
-    //jvm_printf("thread size:%d\n", thread_list->length);
+#if _JVM_DEBUG_GARBAGE
+    jvm_printf("thread size:%d\n", thread_list->length);
+#endif
     if (thread_list->length) {
         arraylist_iter_safe(thread_list, _list_iter_thread_pause, NULL);
 
