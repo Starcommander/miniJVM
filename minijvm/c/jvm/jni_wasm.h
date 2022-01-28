@@ -7,10 +7,10 @@ extern "C" {
 #endif
 /*
  * Class:     org_mini_util_WasmUtil
- * Method:    isWebAssembly
+ * Method:    isWebAssemblyNative
  * Signature: ()Z
  */
-s32 org_mini_util_WasmUtil_isWebAssembly(Runtime *runtime, JClass *clazz);
+s32 org_mini_util_WasmUtil_isWebAssemblyNative(Runtime *runtime, JClass *clazz);
 
 /*
  * Class:     org_mini_util_WasmUtil
@@ -26,6 +26,14 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz);
  * Returns: 1=MainThread 2=BrowserThread 3=Both 0=None
  */
 s32 org_mini_util_WasmUtil_getThreadType (Runtime *runtime, JClass *clazz);
+
+/*
+ * Class:     org_mini_util_WasmUtil
+ * Method:    setMainLoop
+ * Signature: (Z)V
+ * Pauses or resumes the main loop
+ */
+s32 org_mini_util_WasmUtil_setMainLoop (Runtime *runtime, JClass *clazz);
 
 #ifdef __cplusplus
 }

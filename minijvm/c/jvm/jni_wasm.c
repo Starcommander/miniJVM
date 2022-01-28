@@ -28,7 +28,7 @@ char* jstring_to_chars(Instance *jstr, Runtime *runtime) {
  * Signature: ()Z
  */
 
-s32 org_mini_util_WasmUtil_isWebAssembly(Runtime *runtime, JClass *clazz)
+s32 org_mini_util_WasmUtil_isWebAssemblyNative(Runtime *runtime, JClass *clazz)
 {
   RuntimeStack *stack = runtime->stack;
 #ifdef EMSCRIPTEN
@@ -41,8 +41,10 @@ s32 org_mini_util_WasmUtil_isWebAssembly(Runtime *runtime, JClass *clazz)
 
 void emscripten_run_script_ptr(char* chars)
 {
+#ifdef EMSCRIPTEN
   emscripten_run_script(chars);
   free(chars);
+#endif
 }
 
 /*
@@ -57,18 +59,30 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz)
   Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
   char* chars = jstring_to_chars(jstr, runtime);
   int forceMain = localvar_getInt(runtime->localvar, 1);
-  if (!forceMain)
+  int returnInt = localvar_getInt(runtime->localvar, 2);
+  if ( (!forceMain) || emscripten_is_main_runtime_thread())
   {
-    emscripten_run_script(chars);
+    int result = 0;
+    if (returnInt)
+    {
+      result = emscripten_run_script_int(chars);
+    }
+    else
+    {
+      emscripten_run_script(chars);
+    }
+    push_int(stack, result);
   }
-  else if (emscripten_is_main_runtime_thread())
+  else if (returnInt)
   {
-    emscripten_run_script(chars);
+    int result = emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_II, emscripten_run_script_int, &chars);
+    push_int(stack, result);
   }
   else
   {
     emscripten_async_run_in_main_runtime_thread(EM_FUNC_SIG_VI, emscripten_run_script_ptr, &chars);
-    return 0; // Return, because following 'free(chars)' is executed in function later.
+    push_int(stack, 0);
+    return 0; // Return, because following 'free(chars)' is executed in function later via emscripten_run_script_ptr.
   }
   free(chars);
 #endif
@@ -89,6 +103,23 @@ s32 org_mini_util_WasmUtil_getThreadType (Runtime *runtime, JClass *clazz)
   int isBrowser = emscripten_is_main_browser_thread();
   isBrowser = isBrowser * 2;
   push_int(stack, isMain + isBrowser);
+#endif
+  return 0;
+}
+
+/*
+ * Class:     org_mini_util_WasmUtil
+ * Method:    setMainLoop
+ * Signature: (Z)V
+ * Pauses or resumes the main loop
+ */
+s32 org_mini_util_WasmUtil_setMainLoop (Runtime *runtime, JClass *clazz)
+{
+#ifdef EMSCRIPTEN
+  RuntimeStack *stack = runtime->stack;
+  int active = localvar_getInt(runtime->localvar, 0);
+  if (active) { emscripten_resume_main_loop(); }
+  else { emscripten_pause_main_loop(); }
 #endif
   return 0;
 }
