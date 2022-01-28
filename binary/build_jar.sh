@@ -33,8 +33,8 @@ ask_build() # Args: msg
   fi
 }
 
-mkdir lib
-mkdir libex
+mkdir -p lib
+mkdir -p libex
 
 if ask_build "build lib/minijvm_rt.jar" ; then
 $(build_jar minijvm_rt.jar ../minijvm/java/src/main lib "." ".")

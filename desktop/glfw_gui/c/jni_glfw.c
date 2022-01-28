@@ -103,7 +103,6 @@ static void _callback_character(GLFWwindow *window, u32 ch) {
 EMSCRIPTEN_KEEPALIVE
 void callback_key_js(int key, int special)
 {
-EM_ASM(console.log('Key PRE from js: ' + $0), key);
   Runtime *runtime = getRuntimeCurThread(refers.env);
   s32 pos = 0;
   GLFWwindow *window = (__refer) (intptr_t) runtime->jnienv->localvar_getLong_2slot(runtime->localvar, pos);
@@ -117,7 +116,6 @@ EM_ASM(console.log('Key PRE from js: ' + $0), key);
   {
     _callback_character(window, key);
   }
-EM_ASM(console.log('Key POST from js: ' + $0), key);
 }
 #endif
 
