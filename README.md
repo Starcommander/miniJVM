@@ -77,6 +77,18 @@
     <div align=center><img width="672" height="398"   src="https://raw.githubusercontent.com/digitalgust/miniJVM/master/screenshot/appmgr.png"/></div>   
   
   
+## Build for Webbrowser ##
+  Use the scripts in **miniJVM/web**
+  * For jars use the same **/binary/build_jar.sh**
+
+### Screenshot Console-App
+![Console](/screenshot/web-console.png "Web Console")
+### Screenshot GUI-App
+![Table](/screenshot/web-glfw.png "Web Glfw")
+
+### Web examples:
+https://java-on-web.org/examples/
+
 ## Build for Windows/Linux/MacOS platform:     
   There were not essential jar file pre-built, so build these jar file first 
   * Run script **/binary/build_jar.sh** or **/binary/build_jar.bat** to generted jars     
@@ -92,7 +104,6 @@
 >>    Build minijvm /minijvm/c by cmake      
   * Run test script /binary/{platform}/test.sh | test.bat    
  
-   
 ## How to Remote debug:  
   Desktop platform : Run mini_jvm with flag: -Xdebug for debug mode 
   iOS/Android simulator : change /mobile/c/glfmapp/main.c , set **jvm->jdp_enable = 1** after **jvm_create()**   
