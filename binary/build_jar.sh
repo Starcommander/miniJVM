@@ -6,6 +6,16 @@ cd $(dirname $0)
 JAVAC=javac
 JAR=jar
 
+check_java_vers()
+{
+  local j_v=$($JAVAC -version 2>&1 | grep -o " 1.8.*")
+  if [ -z "$j_v" ]; then
+    echo "Error: Wrong java version:"
+    $JAVAC -version
+    echo "Must be 1.8"
+    exit 1
+  fi
+}
 
 build_jar() # Args: jarName srcPath tarPath bootCP cp
 {
@@ -32,6 +42,8 @@ ask_build() # Args: msg
     return 1
   fi
 }
+
+check_java_vers
 
 mkdir -p lib
 mkdir -p libex
