@@ -1,10 +1,24 @@
 #!/bin/bash
 
+# ####################
+# Builds the jar files.
+# Possible arguments: [-a] [java_base]
+# (-a for all, java_base for path to different javac)
+# ####################
+
 echo "Requirement: jdk1.8 jar javac "
 cd $(dirname $0)
 
 JAVAC=javac
 JAR=jar
+
+if [ "$1" = "-a" ]; then
+  BUILDALL="y"
+  shift
+fi
+if [ ! -z "$1" -a -x "$1/javac" ]; then
+  JAVAC="$1/javac"
+fi
 
 check_java_vers()
 {
@@ -13,6 +27,7 @@ check_java_vers()
     echo "Error: Wrong java version:"
     $JAVAC -version
     echo "Must be 1.8"
+    echo "Hint: Use java_home as first argument"
     exit 1
   fi
 }
@@ -34,6 +49,9 @@ build_jar() # Args: jarName srcPath tarPath bootCP cp
 
 ask_build() # Args: msg
 {
+  if [ "$BUILDALL" = "y" ]; then
+    return 0
+  fi
   echo "$1 [y,n]"
   read -e -p ">>> " INPUT
   if [ "$INPUT" = "y" ]; then
