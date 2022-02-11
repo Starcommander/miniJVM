@@ -28,7 +28,7 @@ public class MiniHttpClient extends Thread {
     HttpConnection c = null;
     public static final MiniHttpClient.CltLogger DEFAULT_LOGGER = new CltLogger() {
         @Override
-        void log(String s) {
+        public void log(String s) {
             System.out.println(s);
         }
     };
@@ -44,7 +44,7 @@ public class MiniHttpClient extends Thread {
     public void setTargetFile(String targetFile) { this.targetFile = targetFile; }
 
     abstract static public class CltLogger {
-        abstract void log(String s);
+        public abstract void log(String s);
     }
 
     public void stopNow() {

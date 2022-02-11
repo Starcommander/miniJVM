@@ -10,6 +10,7 @@ import org.mini.layout.UITemplate;
 import org.mini.layout.XContainer;
 import org.mini.layout.XEventHandler;
 import org.mini.layout.XViewSlot;
+import org.mini.net.MiniHttpClient;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -457,7 +458,7 @@ public class AppManager extends GApplication {
 
     MiniHttpClient.CltLogger cltLogger = new MiniHttpClient.CltLogger() {
         @Override
-        void log(String s) {
+        public void log(String s) {
             AppManager.log(s);
         }
     };

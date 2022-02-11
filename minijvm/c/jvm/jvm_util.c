@@ -654,7 +654,11 @@ s32 sys_properties_load(MiniJVM *jvm) {
     }
 
     //modify os para
-#if __JVM_OS_MAC__
+#ifdef EMSCRIPTEN
+    sys_properties_set_c(jvm, "path.separator", ":");
+    sys_properties_set_c(jvm, "file.separator", "/");
+    sys_properties_set_c(jvm, "user.dir", "/home/web_user"); // As described https://emscripten.org/docs/api_reference/Filesystem-API.html
+#elif __JVM_OS_MAC__
     sys_properties_set_c(jvm, "os.name", "Mac");
     sys_properties_set_c(jvm, "path.separator", ":");
     sys_properties_set_c(jvm, "file.separator", "/");

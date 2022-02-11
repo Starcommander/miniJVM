@@ -19,6 +19,10 @@ public class WasmUtil
   /** Executes a script as string
    * @param forceMain Ensures that script runs in main thread, for executing document, window and more. */
   public static native int executeJS(String script, boolean forceMain, boolean returnInt);
+  
+  /** Executes a script as string
+   * @param forceMain Ensures that script runs in main thread, for executing document, window and more. */
+  public static native String strExecuteJS(String script, boolean forceMain);
 
  /** Returns: 1=MainThread 2=BrowserThread 3=Both 0=None */
   public static native int getThreadType();

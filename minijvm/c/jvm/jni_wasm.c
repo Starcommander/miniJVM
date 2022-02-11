@@ -39,22 +39,22 @@ s32 org_mini_util_WasmUtil_isWebAssemblyNative(Runtime *runtime, JClass *clazz)
   return 0;
 }
 
+#ifdef EMSCRIPTEN
 void emscripten_run_script_ptr(char* chars)
 {
-#ifdef EMSCRIPTEN
   emscripten_run_script(chars);
   free(chars);
-#endif
 }
+#endif
 
 /*
  * Class:     org_mini_util_WasmUtil
  * Method:    executeJS
- * Signature: (Ljava/lang/String;Z)V
+ * Signature: (Ljava/lang/String;ZZ)V
  */
+#ifdef EMSCRIPTEN
 s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz)
 {
-#ifdef EMSCRIPTEN
   RuntimeStack *stack = runtime->stack;
   Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
   char* chars = jstring_to_chars(jstr, runtime);
@@ -75,19 +75,50 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz)
   }
   else if (returnInt)
   {
-    int result = emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_II, emscripten_run_script_int, &chars);
+//TODO: Test this
+    int result = emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_II, emscripten_run_script_int, chars);
     push_int(stack, result);
   }
   else
   {
-    emscripten_async_run_in_main_runtime_thread(EM_FUNC_SIG_VI, emscripten_run_script_ptr, &chars);
+    emscripten_async_run_in_main_runtime_thread(EM_FUNC_SIG_VI, emscripten_run_script_ptr, chars);
     push_int(stack, 0);
     return 0; // Return, because following 'free(chars)' is executed in function later via emscripten_run_script_ptr.
   }
   free(chars);
-#endif
   return 0;
 }
+#endif
+
+/*
+ * Class:     org_mini_util_WasmUtil
+ * Method:    executeJS_ResultString
+ * Signature: (Ljava/lang/String;Z)V
+ */
+#ifdef EMSCRIPTEN
+s32 org_mini_util_WasmUtil_strExecuteJS (Runtime *runtime, JClass *clazz)
+{
+  RuntimeStack *stack = runtime->stack;
+  Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+  int forceMain = localvar_getInt(runtime->localvar, 1);
+  if ( (!forceMain) || emscripten_is_main_runtime_thread())
+  {
+    char* chars = jstring_to_chars(jstr, runtime);
+    char* result = emscripten_run_script_string(chars);
+
+    Utf8String *str = utf8_create_c(result);
+    Instance *jstr = jstring_create(str, runtime);
+    push_ref(stack, (__refer) jstr);
+    utf8_destory(str);
+    free(result);
+  }
+  else
+  {
+    emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_III, org_mini_util_WasmUtil_strExecuteJS, runtime, clazz);
+  }
+  return 0;
+}
+#endif
 
 /*
  * Class:     org_mini_util_WasmUtil
@@ -95,17 +126,17 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz)
  * Signature: ()I
  * Returns: 1=MainThread 2=BrowserThread 3=Both 0=None
  */
+#ifdef EMSCRIPTEN
 s32 org_mini_util_WasmUtil_getThreadType (Runtime *runtime, JClass *clazz)
 {
-#ifdef EMSCRIPTEN
   RuntimeStack *stack = runtime->stack;
   int isMain = emscripten_is_main_runtime_thread();
   int isBrowser = emscripten_is_main_browser_thread();
   isBrowser = isBrowser * 2;
   push_int(stack, isMain + isBrowser);
-#endif
   return 0;
 }
+#endif
 
 /*
  * Class:     org_mini_util_WasmUtil
@@ -113,13 +144,14 @@ s32 org_mini_util_WasmUtil_getThreadType (Runtime *runtime, JClass *clazz)
  * Signature: (Z)V
  * Pauses or resumes the main loop
  */
+#ifdef EMSCRIPTEN
 s32 org_mini_util_WasmUtil_setMainLoop (Runtime *runtime, JClass *clazz)
 {
-#ifdef EMSCRIPTEN
+//TODO: Check whether this function is really needed.
   RuntimeStack *stack = runtime->stack;
   int active = localvar_getInt(runtime->localvar, 0);
   if (active) { emscripten_resume_main_loop(); }
   else { emscripten_pause_main_loop(); }
-#endif
   return 0;
 }
+#endif
