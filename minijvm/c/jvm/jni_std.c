@@ -1389,6 +1389,7 @@ static java_native_method METHODS_STD_TABLE[] = {
         {"com/sun/cldc/io/ResourceInputStream", "open",                   "(Ljava/lang/String;)[B",                                        com_sun_cldc_io_ResourceInputStream_open},
         {"org/mini/util/WasmUtil", "isWebAssemblyNative",                   "()Z",                                        org_mini_util_WasmUtil_isWebAssemblyNative},
         {"org/mini/util/WasmUtil", "executeJS",                   "(Ljava/lang/String;ZZ)I",                                        org_mini_util_WasmUtil_executeJS},
+        {"org/mini/util/WasmUtil", "strExecuteJS",                   "(Ljava/lang/String;Z)Ljava/lang/String;",                                        org_mini_util_WasmUtil_strExecuteJS},
         {"org/mini/util/WasmUtil", "getThreadType",                   "()I",                                        org_mini_util_WasmUtil_getThreadType},
         {"org/mini/util/WasmUtil", "setMainLoop",                   "(Z)V",                                        org_mini_util_WasmUtil_setMainLoop},
 //        {"com/sun/cldc/io/Waiter",              "waitForIO",       "",         com_sun_cldc_io_ResourceInputStream_waitForIO},

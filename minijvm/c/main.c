@@ -84,8 +84,8 @@ int main(int argc, char **argv) {
         classpath = "../../binary/libex/glfw_gui.jar;./";
 //        main_name = "test.Gears";
 //        main_name = "test.TestGL";
-#ifdef EMSCRIPTEN_CONSOLE
-        main_name = "test.HelloConsole";
+#ifdef EMSCRIPTEN
+        main_name = "org.mini.util.wasm.MainClassLoader";
 #else
         main_name = "test.AppManagerTest";
 #endif

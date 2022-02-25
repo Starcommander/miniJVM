@@ -1,7 +1,7 @@
 /*
  * Author: Paul Kashofer [Starcommander@github]
  */
-package test;
+package org.mini.util.wasm;
 
 import java.net.URL;
 import org.mini.net.MiniHttpClient;
@@ -12,9 +12,9 @@ import org.mini.util.WasmUtil;
  *
  * @author Paul Kashofer [Starcommander@github]
  */
-public class Main
+public class MainClassLoader
 {
-  final static String TARGET_FILE = "app.jar";
+  final static String TARGET_FILE = "/app.jar";
   /**
    * @param args the command line arguments
    */
@@ -33,7 +33,6 @@ public class Main
         String keyVal[] = var.split("=");
         if (keyVal[0].equals("jar")) { jarUrl = keyVal[1]; }
         if (keyVal[0].equals("main")) { className = keyVal[1]; }
-        System.out.println("- " + var);
       }
     }
     if (className == null || jarUrl == null)
@@ -45,14 +44,15 @@ public class Main
     MiniHttpClient cli = new MiniHttpClient(jarUrl, null, (url, data) -> loadJar(classNameFinal, data));
     cli.setTargetFile(TARGET_FILE);
     if (WasmUtil.getThreadType()==0) { cli.run(); }
-    else { cli.start(); }
-        
-    System.out.println("The Uri in the browser-bar is: " + uriBar);
+    else { 
+      
+      System.out.println("Starting in BG"); //TODO: Irgendwie startet er nicht im BG, sondern synchron.
+      cli.start(); }
   }
   
   static void loadJar(String className, byte[] data)
   {
-    System.out.println("Loading main class: " + className);
+    System.out.println("Starting main class: " + className);
     StandaloneGuiAppClassLoader sgacl = new StandaloneGuiAppClassLoader(TARGET_FILE);
     Thread.currentThread().setContextClassLoader(sgacl);
     try{

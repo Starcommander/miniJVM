@@ -19,7 +19,6 @@ import org.mini.util.WasmUtil;
  * @author Gust
  */
 public class MiniHttpClient extends Thread {
-
     String url;
     String targetFile;
     boolean targetFileForce = false; // TargetFile was set by user, write in any case.
@@ -69,10 +68,9 @@ public class MiniHttpClient extends Thread {
       {
         targetFileForce = true;
       }
-      String s = "{console.log('Pre fetch'); fetch('" + url + "')" +
+      String s = "{fetch('" + url + "')" +
         ".then(response => response.arrayBuffer())" +
-        ".then(data => {console.log('Got the data'); FS.writeFile('" + targetFile + "', new DataView(data)); FS.writeFile('" + targetFile + ".finish', 'finish'); });}";
-      System.out.println("MiniHttpClient Download as wasm run()");
+        ".then(data => {FS.writeFile('" + targetFile + "', new Uint8Array(data)); FS.writeFile('" + targetFile + ".finish', 'finish'); });}";
       WasmUtil.executeJS(s,true,false);
       File finishFile = new File(targetFile + ".finish");
       while (!finishFile.exists())
@@ -95,7 +93,7 @@ public class MiniHttpClient extends Thread {
         int b;
         while ((b = fis.read()) != -1) { bos.write(b); }
         data = bos.toByteArray();
-        logger.log("Successfully received data size: " + data.length);
+        logger.log("Successfully received data size: " + data.length + " bytes");
       }
       catch (IOException ex)
       {
