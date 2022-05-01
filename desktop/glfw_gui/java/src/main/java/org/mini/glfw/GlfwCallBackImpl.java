@@ -13,7 +13,6 @@ import org.mini.gui.GCallBack;
 import org.mini.gui.GObject;
 import org.mini.gui.GToolkit;
 import org.mini.glwrap.GLUtil;
-import org.mini.util.WasmUtil;
 
 import java.io.File;
 
@@ -41,12 +40,12 @@ public class GlfwCallBackImpl extends GCallBack {
     int CLICK_PERIOD = 200;
 
     boolean drag;
-    int hoverX, hoverY; // mouse 
+    int hoverX, hoverY; // mouse
     int buttonOnDrag;
 
     long vg;
 
-    //not in mobile
+    // not in mobile
     float fps;
     float fpsExpect = 60;
 
@@ -94,7 +93,7 @@ public class GlfwCallBackImpl extends GCallBack {
     }
 
 
-    public void init(int width, int height) {
+    public void init(int width, int height, Runnable onSurfaceCreated) {
         this.winWidth = width;
         this.winHeight = height;
 
@@ -135,7 +134,7 @@ public class GlfwCallBackImpl extends GCallBack {
             System.out.println("callback.getNvContext() is null.");
         }
         GToolkit.FontHolder.loadFont(vg);
-        AppLoader.onSurfaceCreated();
+        if (onSurfaceCreated != null) { onSurfaceCreated.run(); }
     }
 
     @Override

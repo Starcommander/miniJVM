@@ -26,9 +26,9 @@ public abstract class GCallBack implements GlfwCallback, GlfmCallBack {
 
             try {
                 Class glfw = Class.forName("org.mini.glfw.Glfw");
-                System.out.println("load gui native " + glfw);
+                System.out.println("Loaded gui native " + glfw);
                 Class glfm = Class.forName("org.mini.glfm.Glfm");
-                System.out.println("load gui native " + glfm);
+                System.out.println("Loaded gui native " + glfm);
                 Class c = Class.forName(System.getProperty("gui.driver"));
                 instance = (GCallBack) c.newInstance();
             } catch (Exception e) {
@@ -97,7 +97,7 @@ public abstract class GCallBack implements GlfwCallback, GlfmCallBack {
 
     public abstract int getFrameBufferWidth();
 
-    public abstract void init(int w, int h);
+    public abstract void init(int w, int h, Runnable onSurfaceCreated);
 
     public abstract void destroy();
 
