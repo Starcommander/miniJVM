@@ -27,6 +27,7 @@ public class StandalongGuiAppClassLoader extends ClassLoader {
         }
     }
 
+    @Override
     protected URL findResource(String path) {
         URL url = Launcher.getFileUrl(path, jarPath);
         return url;
