@@ -528,7 +528,7 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
 //        int debug = 1;
 //    }
     if (!other) {
-        jvm_printf("field not exist :%s.%s%s\n", utf8_cstr(clsName), utf8_cstr(fieldName), utf8_cstr(fieldType));
+        jvm_printf("Class for field not exist: %s.%s%s\n", utf8_cstr(clsName), utf8_cstr(fieldName), utf8_cstr(fieldType));
         return NULL;
     }
 
@@ -601,7 +601,7 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
     MethodInfo *mi = NULL;
     JClass *other = classes_load_get_without_resolve(jloader, clsName, runtime);
     if (!other) {
-        jvm_printf("method not exist :%s.%s%s\n", utf8_cstr(clsName), utf8_cstr(methodName), utf8_cstr(methodType));
+        jvm_printf("Class for method not exist: %s.%s%s\n", utf8_cstr(clsName), utf8_cstr(methodName), utf8_cstr(methodType));
         return NULL;
     }
 

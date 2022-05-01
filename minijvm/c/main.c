@@ -81,10 +81,12 @@ int main(int argc, char **argv) {
 #endif
 
         //test for graphics
-        classpath = "../../binary/libex/glfw_gui.jar;./";
+//        classpath = "../../binary/libex/glfw_gui.jar;./";
 //        main_name = "test.Gears";
 //        main_name = "test.TestGL";
-#ifdef EMSCRIPTEN
+#ifdef EMSCRIPTEN_WINAPP
+        main_name = "org.mini.apploader.GuiLoader";
+#elif defined (EMSCRIPTEN_CONSOLE)
         main_name = "org.mini.util.wasm.MainClassLoader";
 #else
         main_name = "test.AppManagerTest";
