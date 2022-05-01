@@ -1,0 +1,3 @@
+SourceCodePro-Black.otf
+License: OFL-1.1 License (OpenSource)
+Source: https://github.com/adobe-fonts/source-code-pro
