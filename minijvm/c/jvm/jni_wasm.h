@@ -25,6 +25,14 @@ s32 org_mini_util_WasmUtil_executeJS (Runtime *runtime, JClass *clazz);
  * Signature: (Ljava/lang/String;Z)Ljava/lang/String;
  */
 s32 org_mini_util_WasmUtil_strExecuteJS (Runtime *runtime, JClass *clazz);
+
+/*
+ * Class:     org_mini_util_WasmUtil
+ * Method:    executeMainThread
+ * Signature: (Ljava/lang/Runnable;)V
+ */
+s32 org_mini_util_WasmUtil_executeMainThread (Runtime *runtime, JClass *clazz);
+
 /*
  * Class:     org_mini_util_WasmUtil
  * Method:    getThreadType

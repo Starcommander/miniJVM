@@ -1,4 +1,5 @@
 #include "jvm_util.h"
+#include "../../../desktop/glfw_gui/c/media.h"
 #if defined(EMSCRIPTEN)
 #include <emscripten.h>
 #include <emscripten/threading.h>
@@ -20,6 +21,46 @@ char* jstring_to_chars(Instance *jstr, Runtime *runtime) {
     }
     char *empty_ch = (char *)malloc(0);
     return empty_ch;
+}
+
+void native_callback(char* cstr, s64 uLongId)
+{
+if (cstr)
+{
+  printf("Der Str ist NICHT null: %s\n", cstr);
+}
+else
+{
+  printf("Der Str ist null: %s\n", cstr);
+}
+    long longId = uLongId; //TODO: Why is this necessary? Otherwise pushes wrong value.
+    Runtime *runtime = getRuntimeCurThread(refers.env);
+    JniEnv *env = runtime->jnienv;
+    Utf8String *ustr = env->utf8_create_part_c((c8 *)cstr, 0, strlen(cstr));
+    Instance *jstr = env->jstring_create(ustr, runtime);
+    env->utf8_destory(ustr);
+
+    env->push_ref(runtime->stack, jstr);
+    env->push_long(runtime->stack, longId);
+    char* clsname_s = "org/mini/util/NativeCallback";
+    char* name_s = "doCallback";
+    char* type_s = "(Ljava/lang/String;J)V";
+    Utf8String *clsname = env->utf8_create_part_c(clsname_s, 0, strlen(clsname_s));
+    Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+    Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+
+    JClass *clazz = runtime->clazz;
+    MethodInfo *_native_callback =
+                env->find_methodInfo_by_name(clsname, name, type, clazz->jloader, runtime);
+    env->utf8_destory(clsname);
+    env->utf8_destory(name);
+    env->utf8_destory(type);
+//TODO: Cleanup MethodInfo or not?
+
+    s32 ret = env->execute_method(_native_callback, runtime);
+    if (ret) {
+        env->print_exception(runtime);
+    }
 }
 
 /*
@@ -111,11 +152,25 @@ s32 org_mini_util_WasmUtil_strExecuteJS (Runtime *runtime, JClass *clazz)
     push_ref(stack, (__refer) jstr);
     utf8_destory(str);
     free(result);
+//TODO: free chars?
   }
   else
   {
     emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_III, org_mini_util_WasmUtil_strExecuteJS, runtime, clazz);
   }
+  return 0;
+}
+#endif
+
+/*
+ * Class:     org_mini_util_WasmUtil
+ * Method:    executeMainThread
+ * Signature: (Ljava/lang/Runnable;)V
+ */
+#ifdef EMSCRIPTEN
+s32 org_mini_util_WasmUtil_executeMainThread (Runtime *runtime, JClass *clazz)
+{ //TODO: Execute native_callback in main thread.
+//  emscripten_sync_run_in_main_runtime_thread(EM_FUNC_SIG_VII, executeMainThreadNow, runtime, clazz);
   return 0;
 }
 #endif
