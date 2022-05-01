@@ -46,9 +46,16 @@ TAR2="$TAR_DIR/index.html"
 KEY2=$(cat "$TAR2" | grep -n '<textarea id="output"' | awk '{ print $1 }' | tr -d ':')
 REP2=$(cat <<EOF
   <textarea id="output" rows="8" readonly="readonly"></textarea>
-  <input type="text" id="inputTxt" disabled="disabled" /> <!-- Starcommander mod -->
+  <input type="text" id="inputTxt" onkeydown="submitKeyCheck(event)" disabled="disabled" /> <!-- Starcommander mod -->
   <button onclick="submitInputStream()">Submit</button>
   <script>
+    function submitKeyCheck(e)
+    {
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if (code == 13) {
+        submitInputStream();
+      }
+    }
     function submitInputStream()
     {
       var el = document.getElementById("inputTxt");
@@ -67,6 +74,7 @@ EOF
 #   console.log('Key down: KEY=' + event.key + " CODE=" + event.code + " LOCALE=" + event.locale + " LOC=" + event.location);
 # }
 
+REP_FILEDIALOG='<input type="file" style="display:none" id="FakeFileDialog"/>'
 REP_GUIINPUT=$(cat <<EOF
   <textarea id="output" rows="8" readonly="readonly"></textarea>
   <input type="text" id="inputTxt" value="X" oninput="submitInput(event)" autocomplete="off" style="width: 0px; height: 0px; position: absolute; top: -9999px;" />
@@ -114,7 +122,7 @@ if [ "$MOD_TYPE" = "CONSOLE" ]; then
   do_post "$TAR2"
 elif [ "$MOD_TYPE" = "WINAPP" ]; then
   do_pre "$TAR2"
-  modify_target "$KEY2" 1 "$REP_GUIINPUT" "$TAR2"
+  modify_target "$KEY2" 1 "$REP_GUIINPUT\n$REP_FILEDIALOG" "$TAR2"
   do_post "$TAR2"
 else
   echo "Arguments error in modify.sh: Use arguments: tarFile modType"
