@@ -19,7 +19,6 @@ copy_asset()
   echo "Copy asset files..."
   mkdir -p web/asset_dir/lib/
   cp binary/lib/minijvm_rt.jar web/asset_dir/lib/ || exit 2
-  cp binary/libex/minijvm_test.jar web/asset_dir/lib/ || exit 2
 }
 
 gcc_minijvm()
