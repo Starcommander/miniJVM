@@ -78,7 +78,8 @@
   
   
 ## Build for Webbrowser ##
-  Use the scripts in **miniJVM/web**
+  MiniJVM runs (restricted) directly in a Webbrowser.
+  * Use the scripts in **miniJVM/web**
   * For jars use the same **/binary/build_jar.sh**
 
 ### Screenshot Console-App
