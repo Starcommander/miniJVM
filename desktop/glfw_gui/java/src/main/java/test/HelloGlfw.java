@@ -12,11 +12,8 @@ public class HelloGlfw
   {
     System.out.println("HelloGlfw.main()");
     GuiLoader.getInstance().getForm().clear();
-    System.out.println("HelloGlfw.main(2)");
     GuiLoader.getInstance().getForm().add(createPanel());
-    System.out.println("HelloGlfw.main(3)");
     GuiLoader.getInstance().repaintForm();
-    System.out.println("HelloGlfw.main(4)");
   }
 
   private static GPanel createPanel()

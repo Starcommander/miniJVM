@@ -4,6 +4,7 @@
 package org.mini.util.wasm;
 
 import java.net.URL;
+import java.util.Properties;
 import org.mini.net.MiniHttpClient;
 import org.mini.reflect.Launcher;
 import org.mini.util.WasmUtil;
@@ -20,37 +21,28 @@ public class MainClassLoader
    */
   public static void main(String[] args)
   {
-    String uriBar = WasmUtil.strExecuteJS("window.location.href.toString();", true);
-    int varsIdx = uriBar.indexOf('?');
-    String className = null;
-    String jarUrl = null;
-    if (varsIdx > 0)
-    {
-      String uriVars[] = uriBar.substring(varsIdx+1).split("&");
-      for (String var : uriVars)
-      {
-        if (!var.contains("=")) { continue; }
-        String keyVal[] = var.split("=");
-        if (keyVal[0].equals("jar")) { jarUrl = keyVal[1]; }
-        if (keyVal[0].equals("main")) { className = keyVal[1]; }
-      }
-    }
+    Properties prop = Browser.getUrlVariables();
+    String jarUrl = prop.getProperty("jar");
+    String className = prop.getProperty("main");
+    
     if (className == null || jarUrl == null)
     {
       System.out.println("Error: Missing uri-variables 'main' and/or 'jar'");
+      return;
     }
     System.out.println("Downloading jar from: " + jarUrl);
     final String classNameFinal = className;
     MiniHttpClient cli = new MiniHttpClient(jarUrl, null, (url, data) -> loadJar(classNameFinal, data));
     cli.setTargetFile(TARGET_FILE);
     if (WasmUtil.getThreadType()==0) { cli.run(); }
-    else { 
-      
-      System.out.println("Starting in BG"); //TODO: Irgendwie startet er nicht im BG, sondern synchron.
-      cli.start(); }
+    else
+    {
+      System.out.println("Starting in BG"); //TODO: For any reason does not start in bg, but sync.
+      cli.start();
+    }
   }
   
-  static void loadJar(String className, byte[] data)
+  private static void loadJar(String className, byte[] data)
   {
     System.out.println("Starting main class: " + className);
     StandaloneGuiAppClassLoader sgacl = new StandaloneGuiAppClassLoader(TARGET_FILE);

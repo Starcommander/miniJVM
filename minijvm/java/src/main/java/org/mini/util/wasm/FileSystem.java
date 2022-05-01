@@ -29,18 +29,12 @@ public class FileSystem
       command = command + "    return;";
       command = command + "  };";
       command = command + "  console.log('The selected file: ' + fakeFD.files[0].name);";
-command = command + "  console.log('Step0');";
       command = command + "  var fileReader = new FileReader();";
-command = command + "  console.log('Step1');";
       command = command + "fileReader.onload = function(e) {";
       command = command + "  var arrayBuffer = fileReader.result;";
       command = command + "  var tarPath = '" + tarDir + "/' + fakeFD.files[0].name;";
       command = command + "  FS.writeFile(tarPath, new Uint8Array(arrayBuffer));";
-command = command + "  console.log('Step2');";
-//      command = command + "  FS.writeFile('" + targetFile + ".finish', 'finish');";
-command = command + "  console.log('Step3');";
       command = command + "Module.ccall('native_callback', null, ['string', 'number'], [tarPath, " + id + "]);";
-command = command + "  console.log('Step4');";
       command = command + "};";
       command = command + "fileReader.readAsArrayBuffer(new Blob([fakeFD.files[0]]));";
       command = command + "  fakeFD.files.length = 0";
