@@ -23,6 +23,13 @@ public class WasmUtil
   /** Executes a script as string
    * @param forceMain Ensures that script runs in main thread, for executing document, window and more. */
   public static native String strExecuteJS(String script, boolean forceMain);
+  
+  /**
+   * Will execute a Runnable in main-thread and wait for return.
+   * Problem: Does not recognize class files in new classloader.
+   * TODO: Use NativeCallback instead for execute class.
+   */
+  public static native void executeMainThread(Runnable run);
 
  /** Returns: 1=MainThread 2=BrowserThread 3=Both 0=None */
   public static native int getThreadType();
