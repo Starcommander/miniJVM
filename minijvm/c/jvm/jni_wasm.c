@@ -25,14 +25,6 @@ char* jstring_to_chars(Instance *jstr, Runtime *runtime) {
 
 void native_callback(char* cstr, s64 uLongId)
 {
-if (cstr)
-{
-  printf("Der Str ist NICHT null: %s\n", cstr);
-}
-else
-{
-  printf("Der Str ist null: %s\n", cstr);
-}
     long longId = uLongId; //TODO: Why is this necessary? Otherwise pushes wrong value.
     Runtime *runtime = getRuntimeCurThread(refers.env);
     JniEnv *env = runtime->jnienv;

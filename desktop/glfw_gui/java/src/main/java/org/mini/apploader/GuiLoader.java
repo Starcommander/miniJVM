@@ -15,7 +15,7 @@ import org.mini.util.wasm.Downloader;
  */
 public class GuiLoader extends GApplication {
 
-    static final String STR_INFO = "The Jar must contain a start class from javac8,";
+    static final String STR_INFO = "The Jar must contain a start class from java8,";
     static final String STR_INFO2 = "and a manifest.mf with Main-Class notation.";
     static final String STR_START = "Open JAR";
 
@@ -91,13 +91,11 @@ public class GuiLoader extends GApplication {
     void onAction(GObject gobj)
     {
       String name = gobj.getName();
-      System.out.println("org.mini.apploader.GuiLoader.onAction(" + name + ")");
       org.mini.util.wasm.FileSystem.openFileDialog("/", (s) -> onActionFinish(s));
     }
     
     boolean onActionFinish(String jarPath)
     {
-      System.out.println("onActionFinish(String jarPath): " + jarPath);
       if (jarPath == null) { return true; }
       
       SimpleAppLoader.runApp(jarPath);
