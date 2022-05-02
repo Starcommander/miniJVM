@@ -500,4 +500,17 @@ public class AppManager extends GApplication {
         return ret;
 
     }
+    
+    
+  public static void main (String args[])
+  {
+    System.out.println("AppManager.main()");
+    long nv = GuiLoader.getInstance().getForm().getCallBack().getNvContext();
+    GToolkit.FontHolder.loadAddFont("/res/NotoSansCJKsc-Medium.otf", "noto", nv);
+    GToolkit.FontHolder.switchFont("noto");
+    GuiLoader.getInstance().getForm().clear();
+    GuiLoader.getInstance().resizeForm(800, 600);
+    GuiLoader.getInstance().getForm().add(getInstance().getForm());
+    GuiLoader.getInstance().repaintForm();
+  }
 }

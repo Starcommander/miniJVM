@@ -63,6 +63,11 @@ public class GuiLoader extends GApplication {
       long vg = getForm().getCallBack().getNvContext();
       getForm().display(vg);
     }
+    
+    public void resizeForm(int width, int height)
+    {
+      Glfw.glfwSetWindowSize(getForm().getCallBack().getDisplay(), width, height);
+    }
 
     GObject getMainSlot() {
       GPanel mainPanel = new GPanel();

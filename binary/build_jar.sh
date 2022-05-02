@@ -32,6 +32,14 @@ check_java_vers()
   fi
 }
 
+include_example_res() # Args: path/name.class classes-dir
+{
+  if [ "$1" = "org/mini/apploader/AppManager.class" ]; then
+    mkdir "$2/res"
+    find ../ -name NotoSansCJKsc-Medium.otf -exec cp '{}' "$2/res" \;
+  fi
+}
+
 build_jar_example() # Args: subDir path/name.class tardir
 {
   if [ -f "$1/$2" ]; then
@@ -45,6 +53,7 @@ build_jar_example() # Args: subDir path/name.class tardir
     echo "Manifest-Version: 1.0" > "$tmp_dir/MANIFEST.MF"
     echo "Main-Class: $key_name_dot" >> "$tmp_dir/MANIFEST.MF"
     echo "Created-By: Starcommander@github" >> "$tmp_dir/MANIFEST.MF"
+    include_example_res "$2" "$tmp_dir/classes"
     ${JAR} cmf "$tmp_dir/MANIFEST.MF" $3/Ex_$key_name_base.jar -C "$tmp_dir/classes" ./
     rm -r "$tmp_dir"
   fi
@@ -65,6 +74,7 @@ build_jar() # Args: jarName srcPath tarPath bootCP cp [grepSubFilter]
     fi
     build_jar_example classes HelloGlfw.class "$3"
     build_jar_example classes test/HelloConsole.class "$3"
+    build_jar_example classes org/mini/apploader/AppManager.class "$3"
     ${JAR} cf $1 -C classes ./
     rm -rf source.txt
     rm -rf classes

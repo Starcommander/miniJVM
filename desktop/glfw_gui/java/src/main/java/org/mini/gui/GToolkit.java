@@ -12,6 +12,7 @@ import org.mini.nanovg.Nanovg;
 import org.mini.reflect.ReflectArray;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -109,11 +110,13 @@ public class GToolkit {
         static byte[] data_word;
         static byte[] data_icon;
         static byte[] data_emoji;
+        static ArrayList<String> fontList = new ArrayList<String>();
 
         public static synchronized void loadFont(long vg) {
             if (fontLoaded) {
                 return;
             }
+            fontList.add("word");
             data_word = readFileFromJar("/res/SourceSans3-Regular.otf");
             font_word_handle = Nanovg.nvgCreateFontMem(vg, font_word, data_word, data_word.length, 0);
             if (font_word_handle == -1) {
@@ -133,6 +136,38 @@ public class GToolkit {
             }
 
             fontLoaded = true;
+        }
+        
+        /** Allows to switch between loaded fonts.
+       * @param name The unique name for this font. Default is 'word' **/
+        public static void switchFont(String name)
+        {
+          if (fontList.contains(name))
+          {
+            font_word = toUtf8(name);
+          }
+          else
+          {
+            System.out.println("Font does not exist with name: " + name);
+          }
+        }
+        
+        /** Allows to add more fonts.
+       * @param fontFile The font file, may be TTF or OTF.
+       * @param name The name for this font. Must be unique.
+       * @param vg The NvContext. **/
+        public static synchronized void loadAddFont(String fontFile, String name, long vg)
+        {
+          if (fontList.contains(name)) { return; }
+          font_word = toUtf8(name);
+          
+          data_word = readFileFromJar(fontFile);
+          font_word_handle = Nanovg.nvgCreateFontMem(vg, font_word, data_word, data_word.length, 0);
+          if (font_word_handle == -1) {
+              System.out.println("Could not add font: fontFile\n");
+          }
+          nvgAddFallbackFontId(vg, font_word_handle, font_word_handle);
+          fontList.add(name);
         }
     }
 
