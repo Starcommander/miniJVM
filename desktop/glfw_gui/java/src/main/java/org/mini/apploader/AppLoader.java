@@ -37,6 +37,10 @@ public class AppLoader {
     static final String KEY_GUISTYLE = "guistyle";
     static Properties appinfo = new Properties();
     static Properties applist = new Properties();
+    static
+    {
+      checkDir();
+    }
 
     /**
      *
@@ -45,7 +49,6 @@ public class AppLoader {
 
         //System.out.println("start loader");
         //
-        checkDir();
         loadProp(APP_INFO_FILE, appinfo);
         loadProp(APP_LIST_FILE, applist);
 

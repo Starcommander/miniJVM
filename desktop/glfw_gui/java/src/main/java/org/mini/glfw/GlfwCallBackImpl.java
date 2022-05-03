@@ -126,7 +126,7 @@ public class GlfwCallBackImpl extends GCallBack {
         Glfw.glfwMakeContextCurrent(display);
         glfwSwapInterval(1);
         reloadWindow();
-        System.out.println("fbWidth=" + fbWidth + "  ,fbHeight=" + fbHeight);
+        System.out.println("fbWidth=" + fbWidth + ", fbHeight=" + fbHeight);
 
         vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
         if (vg == 0) {
