@@ -111,12 +111,13 @@ public class Glfm {
     }
 
     public static void glfmSetKeyboardVisible(long display, boolean visible) {
-      if (WasmUtil.isWebAssembly())
+      if (visible)
       {
-        if (visible) // Workaround mobile virtual keyboard
-        {
-          WasmUtil.executeJS("if ('virtualKeyboard' in navigator) { document.getElementById('inputTxt').focus(); }");
-        }
+        org.mini.gui.GSoftKeyboard.getInstance().show();
+      }
+      else
+      {
+        org.mini.gui.GSoftKeyboard.getInstance().hide();
       }
     }
 

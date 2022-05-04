@@ -75,38 +75,8 @@ EOF
 # }
 
 REP_FILEDIALOG='<input type="file" style="display:none" id="FakeFileDialog"/>'
-REP_GUIINPUT=$(cat <<EOF
+REP_GUIOUTPUT=$(cat <<EOF
   <textarea id="output" rows="8" readonly="readonly"></textarea>
-  <input type="text" id="inputTxt" value="X" oninput="submitInput(event)" autocomplete="off" style="width: 0px; height: 0px; position: absolute; top: -9999px;" />
-  <script> <!-- Starcommander mod -->
-    function submitInput(event)
-    {
-      if (event.inputType = 'insertText')
-      {
-//        console.log('Key press: ' + event.data);
-        Module.ccall('callback_key_js', // name of C function
-          '', // return type
-          ['number','number'], // argument types
-          [event.data.charCodeAt(0), 0]); // arguments
-      }
-      else if (event.inputType = 'insertLineBreak')
-      {
-        console.log('Key press: ENTER');
-      }
-      else if (event.inputType = 'insertFromPaste')
-      {
-        console.log('Key paste: ' + event.data);
-      }
-      else if (event.inputType = 'deleteByComposition')
-      {
-        console.log('Key press: deleteByComposition');
-      }
-      else if (event.inputType = 'deleteContentBackward')
-      {
-        console.log('Key press: deleteContentBackward');
-      }
-    }
-  </script>
 EOF
 )
 
@@ -122,7 +92,7 @@ if [ "$MOD_TYPE" = "CONSOLE" ]; then
   do_post "$TAR2"
 elif [ "$MOD_TYPE" = "WINAPP" ]; then
   do_pre "$TAR2"
-  modify_target "$KEY2" 1 "$REP_GUIINPUT\n$REP_FILEDIALOG" "$TAR2"
+  modify_target "$KEY2" 1 "$REP_GUIOUTPUT\n$REP_FILEDIALOG" "$TAR2"
   do_post "$TAR2"
 else
   echo "Arguments error in modify.sh: Use arguments: tarFile modType"

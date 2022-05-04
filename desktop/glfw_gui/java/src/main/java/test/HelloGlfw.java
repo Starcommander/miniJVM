@@ -3,7 +3,9 @@ import org.mini.apploader.GuiLoader;
 import org.mini.gui.GButton;
 import org.mini.gui.GLabel;
 import org.mini.gui.GPanel;
+import org.mini.gui.GSoftKeyboard;
 import org.mini.gui.GTextField;
+import org.mini.util.wasm.UserAgent;
 
 public class HelloGlfw
 {
@@ -12,8 +14,11 @@ public class HelloGlfw
   {
     System.out.println("HelloGlfw.main()");
     GuiLoader.getInstance().getForm().clear();
+    float ratio = 1.5f;
+    GuiLoader.getInstance().resizeForm(400, (int)(400*ratio));
     GuiLoader.getInstance().getForm().add(createPanel());
     GuiLoader.getInstance().repaintForm();
+    GSoftKeyboard.getInstance().setActive(true, UserAgent.isMobileDevice());
   }
 
   private static GPanel createPanel()
