@@ -17,11 +17,16 @@ public class WasmUtil
 
   public static void executeJS(String script) { executeJS(script, false, false); }
   /** Executes a script as string
-   * @param forceMain Ensures that script runs in main thread, for executing document, window and more. */
+   * @param script The script as String.
+   * @param forceMain Ensures that script runs in main thread, for executing document, window and more.
+   * @param returnInt Ensures sync-run in any case to return an int from script.
+   * @return The returned integer from script if returnInt is set, otherwise 0. */
   public static native int executeJS(String script, boolean forceMain, boolean returnInt);
   
   /** Executes a script as string
-   * @param forceMain Ensures that script runs in main thread, for executing document, window and more. */
+   * @param script The script as String.
+   * @param forceMain Ensures that script runs in main thread, for executing document, window and more.
+   * @return The string returned from script. */
   public static native String strExecuteJS(String script, boolean forceMain);
   
   /**

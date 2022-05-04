@@ -1,3 +1,7 @@
 SourceSans3-Regular.otf
 License: OFL-1.1 License (OpenSource)
 Source: https://github.com/adobe-fonts/source-sans
+
+keyb-def.png
+License: CC0 (image modified)
+https://openclipart.org/download/183931/iphone5-iO7-keyboard.svg
