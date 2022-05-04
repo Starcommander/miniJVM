@@ -174,6 +174,7 @@ public class GImageItem extends GObject {
         }
     }
 
+    @Override
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         if (isInArea(x, y)) {
             if (button == Glfw.GLFW_MOUSE_BUTTON_1) {//left

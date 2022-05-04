@@ -20,17 +20,17 @@ if [ ! -z "$1" -a -x "$1/javac" ]; then
   JAVAC="$1/javac"
 fi
 
-check_java_vers()
-{
-  local j_v=$($JAVAC -version 2>&1 | grep -o " 1.8.*")
-  if [ -z "$j_v" ]; then
-    echo "Error: Wrong java version:"
-    $JAVAC -version
-    echo "Must be 1.8"
-    echo "Hint: Use java_home as first argument"
-    exit 1
-  fi
-}
+#check_java_vers()
+#{
+#  local j_v=$($JAVAC -version 2>&1 | grep -o " 1.8.*")
+#  if [ -z "$j_v" ]; then
+#    echo "Error: Wrong java version:"
+#    $JAVAC -version
+#    echo "Must be 1.8"
+#    echo "Hint: Use java_home as first argument"
+#    exit 1
+#  fi
+#}
 
 include_example_res() # Args: path/name.class classes-dir
 {
@@ -68,7 +68,7 @@ build_jar() # Args: jarName srcPath tarPath bootCP cp [grepSubFilter]
     rm -rf $3/$1
     mkdir classes
     find $2/java -name "*.java" | grep "$filter" > source.txt
-    ${JAVAC} -bootclasspath $4 -cp $5 -encoding "utf-8" -d classes @source.txt || exit 1
+    ${JAVAC} -source 8 -target 8 -bootclasspath $4 -cp $5 -encoding "utf-8" -d classes @source.txt || exit 1
     if [ -d $2/resource/ ]; then
       cp -R $2/resource/* classes/
     fi
@@ -95,7 +95,7 @@ ask_build() # Args: msg
   fi
 }
 
-check_java_vers
+#check_java_vers
 
 mkdir -p lib
 mkdir -p libex
